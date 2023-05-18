@@ -82,7 +82,6 @@ const Main = ({ IdInstance, apiTokenInstance, senderNumber }) => {
     mode: "onBlur",
   });
   const handleSendMessage = (payload) => {
-    console.log(payload)
     sendMessage({
       message: payload.message,
       senderNumber,

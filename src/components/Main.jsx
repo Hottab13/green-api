@@ -122,7 +122,7 @@ const Main = ({ IdInstance, apiTokenInstance, senderNumber }) => {
       </Form>
       <MessageBlock>
         <Message>
-          {(data && data?.body.messageData?.textMessageData.textMessage) ||
+          {(data && data?.body?.messageData?.textMessageData?.textMessage) ||
             "Нету новых событий!"}
         </Message>
         {senderNumber && (

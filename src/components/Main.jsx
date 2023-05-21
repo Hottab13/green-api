@@ -123,7 +123,14 @@ const Main = ({ IdInstance, apiTokenInstance, senderNumber }) => {
         <BtnHidden type="submit" />
       </Form>
       <MessageBlock>
+<<<<<<< HEAD
         <Message>{notification ? notification : "Нету новых событий!"}</Message>
+=======
+        <Message>
+          {data && data?.body?.messageData?.textMessageData?.textMessage ||
+            "Нету новых событий!"}
+        </Message>
+>>>>>>> bdf3577412b265ee8150bd4f56cafa22b6316593
         {senderNumber && (
           <Form onSubmit={handleSubmit(handleSendMessage)} autoComplete="off">
             <Textarea

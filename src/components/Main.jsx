@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
@@ -11,11 +11,9 @@ import { Input } from "./AuthorizationForm";
 
 const Wrapper = styled.main`
   margin-top: 1rem;
-  //padding: 1rem;
   display: flex;
   width: 100%;
   min-height: 100%;
-
   background: #ffffff;
 `;
 const ContactBlock = styled.div`
@@ -36,13 +34,13 @@ const Form = styled.form`
 `;
 const Message = styled.div`
   height: 75%;
+  padding: 1rem;
 `;
-
 const Textarea = styled.textarea`
   padding: 1rem;
   background: #e5e7eb;
-  font-size: 1rem ;
-  line-height: 1.5rem ;
+  font-size: 1rem;
+  line-height: 1.5rem;
   width: 100%;
   padding: 0.3rem 0.5rem;
   border-radius: 10px;
@@ -56,7 +54,7 @@ const Textarea = styled.textarea`
 `;
 const Number = styled.span`
   background: #e5e7eb;
-  font-size: 1rem ;
+  font-size: 1rem;
   line-height: 1.5rem;
   width: 100%;
   padding: 0.3rem 0.5rem;
@@ -65,24 +63,28 @@ const Number = styled.span`
   margin: 2rem auto;
 `;
 const Main = ({ IdInstance, apiTokenInstance, senderNumber }) => {
+  const [notification, setNotification] = useState(false);
   const [sendMessage] = useSendMessageMutation();
   const [getMess, { data }] = useGetMessageMutation();
+
   useEffect(() => {
     const interval = setInterval(() => {
+      if (data?.body.messageData.textMessageData.textMessage) {
+        setNotification(data.body.messageData.textMessageData.textMessage);
+      }
       getMess({
         IdInstance,
         apiTokenInstance,
       });
-    }, 5000);
+    }, 1000);
     return () => clearInterval(interval);
-  }, [IdInstance, apiTokenInstance, getMess]);
+  }, [IdInstance, apiTokenInstance, data, getMess, notification]);
 
   const distpatch = useDispatch();
   const { register, handleSubmit, reset } = useForm({
     mode: "onBlur",
   });
   const handleSendMessage = (payload) => {
-    console.log(payload)
     sendMessage({
       message: payload.message,
       senderNumber,
@@ -121,10 +123,7 @@ const Main = ({ IdInstance, apiTokenInstance, senderNumber }) => {
         <BtnHidden type="submit" />
       </Form>
       <MessageBlock>
-        <Message>
-          {(data && data?.body?.messageData?.textMessageData?.textMessage) ||
-            "Нету новых событий!"}
-        </Message>
+        <Message>{notification ? notification : "Нету новых событий!"}</Message>
         {senderNumber && (
           <Form onSubmit={handleSubmit(handleSendMessage)} autoComplete="off">
             <Textarea
